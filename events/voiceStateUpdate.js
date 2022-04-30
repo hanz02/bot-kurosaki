@@ -74,7 +74,7 @@ module.exports = {
         }
       } else {
         //~ no one is in the bot channel, and the followedUser is not in any channel, bot can just leave
-        connectToVC(newUserChannel, client, isFollowed, "disconnect");
+        connectToVC(currentBotVoiceChannel, client, isFollowed, "disconnect");
       }
       return;
     }
