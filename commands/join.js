@@ -1,4 +1,3 @@
-const { joinVoiceChannel } = require("@discordjs/voice");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { connectToVC } = require("../utilities/connectVC");
 
@@ -16,17 +15,23 @@ module.exports = {
 
     //* bot already in the same VC as the member called "join"
     if (botVC.channel === userVC.channel) {
-      await interaction.reply(
-        "I am already in the same voice channel as you 😘"
-      );
+      await interaction.reply({
+        content: "I am already in the same voice channel as you 😘",
+        ephemeral: true,
+      });
     } else if (!userVC.channel) {
       //* if user who called is not in a voice channel
-      await interaction.reply(
-        "Are you in a voice channel? I can't join any channel you are in 🙁"
-      );
+      await interaction.reply({
+        content:
+          "Are you in a voice channel? I can't join any channel you are in 🙁",
+        ephemeral: true,
+      });
     } else {
       connectToVC(userVC, client);
-      await interaction.reply("Joined voice channel 🏍️");
+      await interaction.reply({
+        content: "Joined voice channel 🏍️",
+        ephemeral: true,
+      });
     }
     return;
   },
