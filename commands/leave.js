@@ -13,8 +13,17 @@ module.exports = {
 
     //* bot already in the same VC as the member called "join"
     if (botVC.channel === userVC.channel) {
+      await interaction.reply({
+        content: `Leaving channel..`,
+      });
+      await interaction.deleteReply();
+
+      connectToVC(botVC, client, "disconnect");
     } else {
-      await interaction.reply(`<@>`);
+      await interaction.reply({
+        content: `<@${interaction.member.user.id}> You are not in the voice channel <#${botVC.channel.id}>, please switch or join the voice channel to use the voice command 😗`,
+        ephemeral: true,
+      });
     }
     return;
   },
