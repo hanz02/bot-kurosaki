@@ -23,7 +23,7 @@ module.exports = {
     //* ----------- if user was not in a channel & he joined a channel ----------------------
     if (oldUserChannel.channelId == null && newUserChannel.channelId != null) {
       await txtChannel.send(
-        `\`${newUserChannel.member.displayName}\` just joined the voice channel \`${newUserChannel.channel.name}\``
+        `\`${newUserChannel.member.displayName}\` just joined the voice channel <#${newUserChannel.channel.id}>`
       );
 
       //~ if there are 1 or more user still in channel the bot is in, dont join the followedUser
@@ -34,7 +34,7 @@ module.exports = {
     ) {
       //* if user was in a channel & he switched to another channel
       await txtChannel.send(
-        `\`${newUserChannel.member.displayName}\` just switched to the voice channel \`${newUserChannel.channel.name}\``
+        `\`${newUserChannel.member.displayName}\` just switched to the voice channel <#${newUserChannel.channel.id}>`
       );
 
       //~ if there are user still in channel the bot is in, dont leave
@@ -55,7 +55,7 @@ module.exports = {
     } else {
       //* if user was in a channel & he left the channel
       await txtChannel.send(
-        `\`${newUserChannel.member.displayName}\` just left the voice channel \`${oldUserChannel.channel.name}\``
+        `\`${newUserChannel.member.displayName}\` just left the voice channel <#${oldUserChannel.channel.id}>`
       );
 
       //~ if there are user still in channel the bot is in, dont leave. STAY!
