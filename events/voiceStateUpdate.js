@@ -1,4 +1,4 @@
-const { connectToVC } = require("../utilities/connectVC");
+const { connectToVC } = require("../utilities/utilFunctions");
 
 module.exports = {
   name: "voiceStateUpdate",
