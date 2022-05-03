@@ -1,4 +1,4 @@
-const { connectToVC } = require("../utilities/connectVC");
+const { connectToVC } = require("../utilities/functions/connectVC");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {

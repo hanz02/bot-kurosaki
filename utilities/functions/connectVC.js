@@ -1,12 +1,6 @@
 const { joinVoiceChannel } = require("@discordjs/voice");
-const fs = require("fs");
 
 module.exports = {
-  getFiles: function (path, fileType) {
-    return fs.readdirSync(path).filter(function (file) {
-      file.endsWith(fileType);
-    });
-  },
   connectToVC: function (newChannel, client, connection = "connect") {
     //~ if bot is following user
     if (connection === "disconnect") {

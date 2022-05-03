@@ -9,56 +9,44 @@ const TOKEN = process.env.TOKEN;
 //* Create a new client instance
 const client = new Client({ intents: ["GUILDS", "GUILD_VOICE_STATES"] });
 
+const LOAD_SLASH = process.argv[2] === "load";
+
 client.followState = true;
 
-//* --- Slash Command Handler -------- set all COMMAND files object into (client.commands) collection --------------------
-//* bring in all command files
-client.commands = new Collection();
-const commandFiles = fs
-  .readdirSync("./commands")
-  .filter((file) => file.endsWith(".js"));
+//* ---- Slash Command Handler (Deploy and load up) --------
+//* if dev not deploying any new slash command, Load Up the bot normally
 
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  //* Set a new item in the Collection
-  //* With the key as the command name and the value as the exported module
-  client.commands.set(command.slash_command.name, command);
-}
+client.loadSlashcommads = function (client, LOAD_SLASH) {
+  require("./handlers/slashCommands")(client, LOAD_SLASH);
+};
 
-//* ---- Event Handler -------- bring in all EVENT files object & load then (client.once/client.on)  ----------------------
-//* bring in all event files
-const Eventfiles = fs
-  .readdirSync("./events")
-  .filter((file) => file.endsWith(".js"));
+client.loadSlashcommads(client, LOAD_SLASH);
 
-//* loop through event files
-for (const file of Eventfiles) {
-  const event = require(`./events/${file}`);
+if (!LOAD_SLASH) {
+  //* ---- Event Handler -------- bring in all EVENT files object & load then (client.once/client.on)  ----------------------
+  client.loadEvents = function (client) {
+    require("./handlers/events.js")(client);
+  };
+  client.loadEvents(client);
 
-  if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args));
-  } else {
-    client.on(event.name, (...args) => event.execute(client, ...args));
+  //* ---- Button Handler -------- bring in all BUTTON files and put into client.buttons Collection   ----------------------
+  client.buttons = new Collection();
+
+  //* get all button folder
+  const ButtonFolders = fs.readdirSync("./buttons");
+  for (const folder of ButtonFolders) {
+    //*in each button folder, get all button js files
+    const buttonFiles = fs
+      .readdirSync(`./buttons/${folder}`)
+      .filter((file) => file.endsWith(".js"));
+
+    //* in each button js file, load them into client.buttons Collection
+    for (const buttonFile of buttonFiles) {
+      const button = require(`./buttons/${folder}/${buttonFile}`);
+      client.buttons.set(button.data.name, button);
+    }
   }
+
+  //~ Login to Discord with your client's token
+  client.login(TOKEN);
 }
-
-//* ---- Button Handler -------- bring in all BUTTON files and put into client.buttons Collection   ----------------------
-client.buttons = new Collection();
-
-//* get all button folder
-const ButtonFolders = fs.readdirSync("./buttons");
-for (const folder of ButtonFolders) {
-  //*in each button folder, get all button js files
-  const buttonFiles = fs
-    .readdirSync(`./buttons/${folder}`)
-    .filter((file) => file.endsWith(".js"));
-
-  //* in each button js file, load them into client.buttons Collection
-  for (const buttonFile of buttonFiles) {
-    const button = require(`./buttons/${folder}/${buttonFile}`);
-    client.buttons.set(button.data.name, button);
-  }
-}
-
-//~ Login to Discord with your client's token
-client.login(TOKEN);
