@@ -27,7 +27,7 @@ module.exports = {
           return response.data;
         })
         .catch((error) => {
-          console.log("Erorr fetching creator GitHub profile");
+          console.log("Error fetching creator GitHub profile");
           return;
         });
 
@@ -51,7 +51,7 @@ module.exports = {
           return response.data;
         })
         .catch((error) => {
-          console.log("Erorr fetching creator GitHub repos");
+          console.log("Error fetching creator GitHub repos");
           return;
         });
 
@@ -60,7 +60,7 @@ module.exports = {
       if (creatorRepoCount < 5) {
         for (let i = 0; i < creatorRepoCount; i++) {
           const temp = repos[i];
-          creatorRepos += `👉 **[${temp.name}](${temp.html_url})**\t\n`;
+          creatorRepos += `👉 **[${temp.name}](${temp.html_url})**      \n`;
         }
       } else {
         //* use to check for duplicate repo selected by randomizer

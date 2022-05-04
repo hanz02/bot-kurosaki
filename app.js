@@ -1,5 +1,5 @@
 //* Require the necessary discord.js classes & env variable
-const { Client, Intents, Message } = require("discord.js");
+const { Client } = require("discord.js");
 const { Collection } = require("@discordjs/collection");
 const fs = require("fs");
 
@@ -7,7 +7,9 @@ require("dotenv").config();
 const TOKEN = process.env.TOKEN;
 
 //* Create a new client instance
-const client = new Client({ intents: ["GUILDS", "GUILD_VOICE_STATES"] });
+const client = new Client({
+  intents: ["GUILDS", "GUILD_VOICE_STATES", "GUILD_MESSAGES"],
+});
 
 const LOAD_SLASH = process.argv[2] === "load";
 
@@ -46,6 +48,17 @@ if (!LOAD_SLASH) {
       client.buttons.set(button.data.name, button);
     }
   }
+
+  const { DisTube } = require("distube");
+  const { SpotifyPlugin } = require("@distube/spotify");
+  const { SoundCloudPlugin } = require("@distube/soundcloud");
+  const { YtDlpPlugin } = require("@distube/yt-dlp");
+
+  //* ---------- Music Player ---------------
+  client.distube = new DisTube(client, {
+    youtubeDL: false,
+    plugins: [new SpotifyPlugin(), new SoundCloudPlugin(), new YtDlpPlugin()],
+  });
 
   //~ Login to Discord with your client's token
   client.login(TOKEN);
