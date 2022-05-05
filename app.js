@@ -2,6 +2,7 @@
 const { Client } = require("discord.js");
 const { Collection } = require("@discordjs/collection");
 const fs = require("fs");
+const { Player } = require("discord-player");
 
 require("dotenv").config();
 const TOKEN = process.env.TOKEN;
@@ -55,10 +56,22 @@ if (!LOAD_SLASH) {
   const { YtDlpPlugin } = require("@distube/yt-dlp");
 
   //* ---------- Music Player ---------------
+  client.player = new Player(client);
+
   client.distube = new DisTube(client, {
     youtubeDL: false,
     plugins: [new SpotifyPlugin(), new SoundCloudPlugin(), new YtDlpPlugin()],
   });
+
+  client.distube.on("addList", (queue, playlist) =>
+    queue.textChannel.send(`Added ${playlist.songs.length} songs to the queue!`)
+  );
+
+  client.distube.on("playSong", (queue, song) =>
+    queue.textChannel.send(
+      `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}`
+    )
+  );
 
   //~ Login to Discord with your client's token
   client.login(TOKEN);

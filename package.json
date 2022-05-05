@@ -10,12 +10,15 @@
     "@distube/yt-dlp": "^1.0.2",
     "axios": "^0.27.2",
     "discord-api-types": "^0.31.2",
+    "discord-player": "^5.2.2",
     "discord.js": "^13.6.0",
     "distube": "^3.3.4",
     "dotenv": "^16.0.0",
     "ffmpeg-static": "^4.4.1",
     "node-fetch": "^2.6.7",
-    "yt-mix-playlist": "^0.1.2-b.2"
+    "yt-mix-playlist": "^0.1.2-b.2",
+    "ytpl": "^2.3.0",
+    "ytsr": "^3.8.0"
   },
   "name": "bot-kurosaki",
   "version": "1.0.0",
