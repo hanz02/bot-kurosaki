@@ -3,6 +3,8 @@ const { connectToVC } = require("../utilities/functions/connectVC");
 module.exports = {
   name: "voiceStateUpdate",
   async execute(client, oldUserChannel, newUserChannel) {
+    //* to check if user mute/deafen, we ignore (user never changed/left/joined VC)
+    if (newUserChannel.channelId === oldUserChannel.channelId) return;
     //* if a bot joined channel, we dont output his activity to text channel
     if (newUserChannel.member.user.bot) return;
 
@@ -21,18 +23,15 @@ module.exports = {
     const isFollowed = oldUserChannel.member.user.id === client.followedUser;
 
     //* ----------- if user was not in a channel & he joined a channel ----------------------
-    if (oldUserChannel.channelId == null && newUserChannel.channelId != null) {
+    if (oldUserChannel.channelId === null) {
       await txtChannel.send(
         `\`${newUserChannel.member.displayName}\` just joined the voice channel <#${newUserChannel.channel.id}>`
       );
 
       //~ if there are 1 or more user still in channel the bot is in, dont join the followedUser
       if (currentBotVoiceChannel?.members.size > 1) return;
-    } else if (
-      oldUserChannel.channelId != null &&
-      newUserChannel.channelId != null
-    ) {
-      //* if user was in a channel & he switched to another channel
+    } else if (oldUserChannel.channelId && newUserChannel.channelId) {
+      //* if user was in a channel & he switched to another channel (also)
       await txtChannel.send(
         `\`${newUserChannel.member.displayName}\` just switched to the voice channel <#${newUserChannel.channel.id}>`
       );
@@ -52,7 +51,7 @@ module.exports = {
           return;
         }
       }
-    } else {
+    } else if (newUserChannel.channelId === null) {
       //* if user was in a channel & he left the channel
       await txtChannel.send(
         `\`${newUserChannel.member.displayName}\` just left the voice channel <#${oldUserChannel.channel.id}>`
