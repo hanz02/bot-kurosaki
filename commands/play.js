@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { connectToVC } = require("../utilities/functions/connectVC");
+const { MessageEmbed } = require("discord.js");
 
 const log = console.log;
 
@@ -15,117 +15,145 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
-    //* get user voice state
-    const userChannel = interaction.member.voice;
-    const botChannel = interaction.guild.me.voice;
+    try {
+      //* get user voice state
+      const userChannel = interaction.member.voice;
+      const botChannel = interaction.guild.me.voice;
 
-    if (!userChannel.channelId) {
-      return await interaction.reply({
-        content: "You are not in a voice channel 🥺",
-        ephemeral: true,
-      });
-    } else if (botChannel.channelId !== userChannel.channelId) {
-      //* if there are people still in the voice channel with the bot
-      if (botChannel.channel?.members.size > 1)
+      if (!userChannel.channelId) {
         return await interaction.reply({
-          content: "I am at another voice channel with someone else, sorry",
+          content: "You are not in a voice channel 🥺",
           ephemeral: true,
         });
-    }
-    //* the bot is free / no people in the channel with the bot
-    // await connectToVC(userChannel, client);
+      } else if (botChannel.channelId !== userChannel.channelId) {
+        //* if there are people still in the voice channel with the bot
+        if (botChannel.channel?.members.size > 1)
+          return await interaction.reply({
+            content: "I am at another voice channel with someone else, sorry",
+            ephemeral: true,
+          });
+      }
 
-    //* ------- start playing music ----------------
-    const {
-      checkQueryYoutube,
-    } = require("../utilities/functions/checkQueryYoutube");
-    const musicQuery = interaction.options.get("query").value;
-    let playingMusic = "";
+      //* ----------------------------- start playing music -------------------------------
+      const {
+        checkQueryYoutube,
+      } = require("../utilities/functions/checkQueryYoutube");
+      const musicQuery = interaction.options.get("query").value;
 
-    await interaction.deferReply();
+      await interaction.deferReply();
 
-    const queryResult = await checkQueryYoutube(client, musicQuery);
-    if (queryResult && queryResult.resultType === "mixPlaylist") {
-      const mixPlaylist = queryResult.value;
+      //* check if input query is a youtube mix playlist
+      const queryResult = await checkQueryYoutube(client, musicQuery);
+      const queue = client.distube.getQueue(interaction);
+      if (queryResult && queryResult.resultType === "mixPlaylist") {
+        const mixPlaylist = queryResult.value;
+        //* set for "addList" event indication boolean "this playlist added is a mix playlist" to the sw distube queue
+        interaction.guild.distubeYoutubeMix = {
+          isMixYT: true,
+          length: mixPlaylist.items.length,
+        };
 
-      //* play first music from the query results
-      await client.distube.play(userChannel.channel, mixPlaylist.items[0], {
-        textChannel: interaction.channel,
-        member: interaction.member,
-      });
-
-      //* remove first music from the query results
-      //* create customPlaylist with remaining query result music and add customPlaylist to distube queue
-      mixPlaylist.items.shift();
-      const arraySongsUrl = mixPlaylist.items.map((e) => e.url);
-      client.distube
-        .createCustomPlaylist(arraySongsUrl)
-        .then(async (customPlaylist) => {
-          await client.distube.play(userChannel.channel, customPlaylist, {
+        //* if there are no queue or no songs in queue (we want to add playlist/song)
+        if (!queue || queue.songs.length === 0) {
+          //* play first music from the query results
+          await client.distube.play(userChannel.channel, mixPlaylist.items[0], {
             textChannel: interaction.channel,
             member: interaction.member,
           });
+
+          interaction.followUp({
+            embeds: [
+              new MessageEmbed().setDescription(
+                `🎶 Playing your music **${mixPlaylist.items[0].title}** 🎵 🎼`
+              ),
+            ],
+          });
+        } else {
+          await interaction.followUp({
+            embeds: [
+              new MessageEmbed().setDescription(
+                `🎶 Adding your tracks.. 🎵 🎼`
+              ),
+            ],
+          });
+          interaction.deleteReply();
+        }
+
+        distubeAddPlaylist(mixPlaylist, interaction, client, userChannel);
+      } else if (queryResult && queryResult.resultType === "other") {
+        const resultMusic = queryResult.value;
+
+        //* if there are no queue or no songs in queue (we want to add playlist/song)
+        if (!queue || queue.songs.length === 0) {
+          await client.distube.play(userChannel.channel, resultMusic, {
+            textChannel: interaction.channel,
+            member: interaction.member,
+          });
+          await interaction.followUp({
+            embeds: [
+              new MessageEmbed().setDescription(
+                `🎶 Playing your music **${
+                  client.distube.getQueue(interaction).songs[0].name
+                }** 🎵🎼`
+              ),
+            ],
+          });
+        } else {
+          await client.distube.play(userChannel.channel, resultMusic, {
+            textChannel: interaction.channel,
+            member: interaction.member,
+          });
+          await interaction.followUp({
+            embeds: [
+              new MessageEmbed().setDescription(
+                `🎶 Adding your track to the queue.. 🎵 🎼`
+              ),
+            ],
+          });
+
+          interaction.deleteReply();
+        }
+      } else {
+        return await interaction.followUp({
+          content: `❌ | Track **${musicQuery}** not found!`,
+          ephemeral: true,
         });
-    } else if (queryResult && queryResult.resultType === "other") {
-      const resultMusic = queryResult.value;
-      await client.distube.play(userChannel.channel, resultMusic, {
-        textChannel: interaction.channel,
-        member: interaction.member,
-      });
-    } else {
+      }
+    } catch (err) {
+      console.log(err);
       return await interaction.followUp({
         content: `❌ | Track **${musicQuery}** not found!`,
         ephemeral: true,
       });
     }
-
-    await interaction.followUp({
-      content: `🎶 Playing your music.. 🎵🎼`,
-    });
-    await interaction.deleteReply();
-
-    // const playlist = await ytpl(musicQuery, {
-    //   limit: 10,
-    // });
-
-    // log(playlist);
-
-    // const ytSearchResults = await ytsr(musicQuery, {
-    //   limit: 25,
-    // });
-    // log(ytSearchResults);
-
-    // const searchResult = await client.distube
-    //   .search(arraySongs)
-    //   .then((x) => {
-    //     return x[0];
-    //   })
-    //   .catch(console.error);
-
-    // console.log(searchResult);
-
-    // if (!searchResult) {
-    //   return await interaction.followUp({
-    //     content: `❌ | Track **${musicQuery}** not found!`,
-    //     ephemeral: true,
-    //   });
-    // }
-
-    // await client.distube.play(userChannel.channel, customPlaylist, {
-    //   textChannel: interaction.channel,
-    //   member: interaction.member,
-    // });
-
-    // client.distube.getQueue(interaction).songs.push(arraySongs[1]);
-    // console.log(client.distube.getQueue(interaction));
-
-    // client.distube.play(userChannel.channel, customPlaylist, {
-    //   textChannel: interaction.channel,
-    //   member: interaction.member,
-    // });
-
-    // return await interaction.followUp({
-    //   content: `🎶 Track ${searchResult.name} is playing 🎵🎼`,
-    // });
   },
 };
+
+async function distubeAddPlaylist(
+  mixPlaylist,
+  interaction,
+  client,
+  voiceChannel
+) {
+  //* remove first song from the mixPlaylist, since it's already played first by distube queue
+  mixPlaylist.items.shift();
+  const arraySongsUrl = mixPlaylist.items.map((e) => e.url);
+
+  //* add remaining mix playlist tracks distube queue
+  const message = await interaction.channel.send({
+    embeds: [
+      new MessageEmbed().setDescription("🎶 Adding tracks to queue.. 🎵 🎼"),
+    ],
+  });
+  client.distube
+    .createCustomPlaylist(arraySongsUrl)
+    .then(async (customPlaylist) => {
+      //* set for "addList" event indication boolean "this playlist added is a mix playlist" to the sw distube queue
+      client.distube.queues.get(interaction).isMixYT = true;
+      await client.distube.play(voiceChannel.channel, customPlaylist, {
+        textChannel: interaction.channel,
+        member: interaction.member,
+      });
+      await message.delete();
+    });
+}
