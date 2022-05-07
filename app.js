@@ -62,6 +62,7 @@ if (!LOAD_SLASH) {
   client.distube = new DisTube(client, {
     youtubeDL: false,
     plugins: [new SpotifyPlugin(), new SoundCloudPlugin(), new YtDlpPlugin()],
+    leaveOnStop: false,
   });
 
   process.on("warning", (e) => console.warn(e.stack));
@@ -110,7 +111,7 @@ if (!LOAD_SLASH) {
   });
 
   client.distube.on("addSong", (queue, song) => {
-    if (queue.songs.length === 0) return;
+    if (queue.songs.length === 1) return;
     queue.textChannel.send({
       embeds: [
         new MessageEmbed().setDescription(
