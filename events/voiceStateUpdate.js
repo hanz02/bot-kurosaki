@@ -47,7 +47,7 @@ module.exports = {
         if (followedUserVC) {
           //~ if bot is following user
           //~ bot follows and switch/join to vc
-          connectToVC(followedUserVC, client, isFollowed);
+          connectToVC(followedUserVC, client);
           return;
         }
       }
@@ -73,12 +73,12 @@ module.exports = {
         }
       } else {
         //~ no one is in the bot channel, and the followedUser is not in any channel, bot can just leave
-        connectToVC(currentBotVoiceChannel, client, isFollowed, "disconnect");
+        connectToVC(currentBotVoiceChannel, client, "disconnect");
       }
       return;
     }
     if (client.followState && isFollowed) {
-      connectToVC(newUserChannel, client, isFollowed);
+      connectToVC(newUserChannel, client);
     }
   },
 };

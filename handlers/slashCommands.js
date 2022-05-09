@@ -28,10 +28,13 @@ module.exports = async function (client, load) {
       //* create rest API object (REST: allow BOT --> perform action to user discord server)
       const rest = new REST({ version: "9" }).setToken(TOKEN);
 
+      //! this snippet is used to delete all guild specific slash commands
       // rest.get(Routes.applicationCommands(CLIENT_ID)).then((data) => {
       //   const promises = [];
       //   for (const command of data) {
-      //     const deleteUrl = `${Routes.applicationCommands(CLIENT_ID)}/${command.id}`;
+      //     const deleteUrl = `${Routes.applicationCommands(CLIENT_ID)}/${
+      //       command.id
+      //     }`;
       //     promises.push(rest.delete(deleteUrl));
       //   }
       //   return Promise.all(promises);

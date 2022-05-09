@@ -1,7 +1,7 @@
 const { joinVoiceChannel } = require("@discordjs/voice");
 
 module.exports = {
-  connectToVC: function (newChannel, client, connection = "connect") {
+  connectToVC: async function (newChannel, client, connection = "connect") {
     //~ if bot is following user
     if (connection === "disconnect") {
       //~ bot follows and switch/join to vc

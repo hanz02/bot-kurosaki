@@ -48,6 +48,7 @@ if (!LOAD_SLASH) {
     for (const buttonFile of buttonFiles) {
       const button = require(`./buttons/${folder}/${buttonFile}`);
       client.buttons.set(button.data.name, button);
+      console.log(`Button: ${buttonFile} has been loaded`);
     }
   }
 
@@ -69,7 +70,8 @@ if (!LOAD_SLASH) {
 
   client.distube.on("addList", (queue, playlist) => {
     //* check: if the list to be added is a youtube mix playlist
-    const myDistubeYoutubeMix = queue.voiceChannel.guild.distubeYoutubeMix;
+    const myDistubeYoutubeMix =
+      playlist.member.voice.channel.guild.distubeYoutubeMix;
     queue.textChannel.send({
       embeds: [
         new MessageEmbed().setDescription(
@@ -96,7 +98,7 @@ if (!LOAD_SLASH) {
             iconURL: client.user.displayAvatarURL(),
           })
           .setDescription(
-            `**Requested by <@${song.member.id}>** \n\`\`\` ${song.name} \`\`\` \n**Track Source: [Click Me](${song.url})**`
+            `**Requested by <@${song.member.id}>** \n\`\`\`${song.name} | ${song.uploader.name} \`\`\` \n**Track Source: [Click Me](${song.url})**`
           )
           .setImage(song.thumbnail)
           .setFooter({

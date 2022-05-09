@@ -1,15 +1,15 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const { progressBar } = require("./../utilities/ProgressBar");
 
 module.exports = {
   slash_command: new SlashCommandBuilder()
-    .setName("nowplaying")
-    .setDescription("Show current playing track"),
+    .setName("clear")
+    .setDescription(
+      "Clear remaining tracks in the queue except current playing track"
+    ),
 
   async execute(interaction, client) {
     try {
-      console.log(interaction.queueTrack);
       //* get user voice state
       const userChannel = interaction.member.voice;
       const botChannel = interaction.guild.me.voice;
@@ -31,30 +31,10 @@ module.exports = {
 
       const queue = client.distube.getQueue(interaction);
       if (!queue || queue.songs.length === 0) {
-        return interaction.reply("There is no track playing right now");
+        return interaction.reply("The queue is already empty");
       } else {
-        const song = queue.songs[0];
-        const trackProgress = progressBar(queue.currentTime, song.duration, 35);
-
-        return interaction.reply({
-          embeds: [
-            new MessageEmbed()
-              .setAuthor({
-                name: "Now Playing",
-                iconURL: client.user.displayAvatarURL(),
-              })
-              .setDescription(
-                `Requested by <@${song.member.id}> | Track Source: **[Click Me](${song.url})** \n\n\`\`\`🎧 CURRENT TRACK 🎶 \n\n[${song.name}] \`\`\`` +
-                  `\n\`\`\`${
-                    queue.playing ? "▶️ PLAYING" : "⏸️ PAUSED"
-                  } | Duration: ${song.formattedDuration} | Remaning Songs: ${
-                    queue.songs.length - 1
-                  }\n\n${trackProgress} (${queue.formattedCurrentTime}/${
-                    queue.formattedDuration
-                  }) \`\`\` `
-              ),
-          ],
-        });
+        queue.songs.splice(1);
+        return interaction.reply(`Track queue has been cleared`);
       }
     } catch (err) {
       console.log(err);
