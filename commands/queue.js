@@ -50,7 +50,7 @@ module.exports = {
         });
       } else {
         //* divide by 10 = we only want 10 tracks to be displayed per page
-        const pageAmount = Math.ceil(queue.songs.length / 10);
+        const pageAmount = Math.ceil((queue.songs.length - 1) / 10);
 
         //* get first 10 tracks, excluding the first track in queue
         const queueDisplayTracks =
