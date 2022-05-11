@@ -9,11 +9,11 @@ module.exports = {
     try {
       const queue = client.distube.getQueue(interaction);
       if (!queue || queue.songs.length === 0) {
-        return interaction.reply("There is no song playing right now");
+        return await interaction.reply("There is no song playing right now");
       }
 
       if (queue.playing === false) {
-        return interaction.reply("There player is already paused");
+        return await interaction.reply("There player is already paused");
       }
 
       queue.pause();

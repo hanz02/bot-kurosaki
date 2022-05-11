@@ -17,6 +17,7 @@
     "ffmpeg-static": "^4.4.1",
     "node-fetch": "^2.6.7",
     "play-dl": "^1.9.4",
+    "sharp": "^0.30.4",
     "yt-mix-playlist": "^0.1.2-b.2",
     "ytdl-core": "^4.11.0",
     "ytpl": "^2.3.0",

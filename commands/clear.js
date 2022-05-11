@@ -31,10 +31,10 @@ module.exports = {
 
       const queue = client.distube.getQueue(interaction);
       if (!queue || queue.songs.length === 0) {
-        return interaction.reply("The queue is already empty");
+        return await interaction.reply("The queue is already empty");
       } else {
         queue.songs.splice(1);
-        return interaction.reply(`Track queue has been cleared`);
+        return await interaction.reply(`Track queue has been cleared`);
       }
     } catch (err) {
       console.log(err);

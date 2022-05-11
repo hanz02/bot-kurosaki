@@ -88,7 +88,24 @@ if (!LOAD_SLASH) {
     delete queue.voiceChannel.guild.distubeYoutubeMix;
   });
 
-  client.distube.on("playSong", (queue, song) => {
+  client.distube.on("playSong", async (queue, song) => {
+    // console.log(song.thumbnail);
+
+    // const axios = require("axios");
+    // const arrayBuffer = await axios.get(song.thumbnail, {
+    //   responseType: "arraybuffer",
+    // });
+
+    // const buffer = Buffer.from(arrayBuffer.data, "binary");
+
+    // const sharp = require("sharp");
+    // const bufferResized = await sharp(buffer)
+    //   .rotate()
+    //   .resize(400)
+    //   .webp({ lossless: true })
+    //   .toBuffer();
+
+    // console.log(bufferResized.toString("base64"));
     const myDistubeYoutubeMix = queue.voiceChannel.guild.distubeYoutubeMix;
     queue.textChannel.send({
       embeds: [

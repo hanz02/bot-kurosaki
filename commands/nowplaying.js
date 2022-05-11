@@ -9,7 +9,6 @@ module.exports = {
 
   async execute(interaction, client) {
     try {
-      console.log(interaction.queueTrack);
       //* get user voice state
       const userChannel = interaction.member.voice;
       const botChannel = interaction.guild.me.voice;
@@ -31,12 +30,12 @@ module.exports = {
 
       const queue = client.distube.getQueue(interaction);
       if (!queue || queue.songs.length === 0) {
-        return interaction.reply("There is no track playing right now");
+        return await interaction.reply("There is no track playing right now");
       } else {
         const song = queue.songs[0];
         const trackProgress = progressBar(queue.currentTime, song.duration, 35);
 
-        return interaction.reply({
+        return await interaction.reply({
           embeds: [
             new MessageEmbed()
               .setAuthor({

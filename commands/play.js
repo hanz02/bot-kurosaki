@@ -62,7 +62,7 @@ module.exports = {
             member: interaction.member,
           });
 
-          interaction.followUp({
+          await interaction.followUp({
             embeds: [
               new MessageEmbed().setDescription(
                 `🎶 Playing your music **${mixPlaylist.items[0].title}** 🎵 🎼`
@@ -80,7 +80,7 @@ module.exports = {
           interaction.deleteReply();
         }
 
-        distubeAddPlaylist(mixPlaylist, interaction, client, userChannel);
+        await distubeAddPlaylist(mixPlaylist, interaction, client, userChannel);
       } else if (queryResult && queryResult.resultType === "other") {
         const resultMusic = queryResult.value;
 
@@ -112,7 +112,7 @@ module.exports = {
             ],
           });
 
-          interaction.deleteReply();
+          await interaction.deleteReply();
         }
       } else {
         return await interaction.followUp({
@@ -146,7 +146,7 @@ async function distubeAddPlaylist(
       new MessageEmbed().setDescription("🎶 Adding tracks to queue.. 🎵 🎼"),
     ],
   });
-  client.distube
+  await client.distube
     .createCustomPlaylist(arraySongsUrl)
     .then(async (customPlaylist) => {
       //* set for "addList" event indication boolean "this playlist added is a mix playlist" to the sw distube queue

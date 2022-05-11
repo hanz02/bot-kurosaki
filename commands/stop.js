@@ -29,7 +29,7 @@ module.exports = {
 
       const queue = client.distube.getQueue(interaction);
       if (!queue || queue.songs.length === 0) {
-        return interaction.reply(
+        return await interaction.reply(
           "The queue is empty and the bot is not currently playing anything"
         );
       } else {
