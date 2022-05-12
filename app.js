@@ -66,9 +66,9 @@ if (!LOAD_SLASH) {
     plugins: [new SpotifyPlugin(), new SoundCloudPlugin(), new YtDlpPlugin()],
     leaveOnStop: false,
     customFilters: {
-      "earrape": "bass=g=50,treble=g=20",
-      "vaporwave": "aresample=48000,asetrate=48000*0.8",
-      "nightcore": "aresample=48000,asetrate=48000*1.25",
+      earrape: "bass=g=50,treble=g=20",
+      vaporwave: "aresample=48000,asetrate=48000*0.8",
+      nightcore: "aresample=48000,asetrate=48000*1.25",
       "8d": "apulsator=hz=0.08",
     },
   });
@@ -113,6 +113,7 @@ if (!LOAD_SLASH) {
     //   .toBuffer();
 
     // console.log(bufferResized.toString("base64"));
+
     const myDistubeYoutubeMix = queue.voiceChannel.guild.distubeYoutubeMix;
     queue.textChannel.send({
       embeds: [
