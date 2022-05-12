@@ -56,6 +56,7 @@ if (!LOAD_SLASH) {
   const { SpotifyPlugin } = require("@distube/spotify");
   const { SoundCloudPlugin } = require("@distube/soundcloud");
   const { YtDlpPlugin } = require("@distube/yt-dlp");
+  const { Player } = require("discord-player");
 
   //* ---------- Music Player ---------------
   client.player = new Player(client);
@@ -64,6 +65,12 @@ if (!LOAD_SLASH) {
     youtubeDL: false,
     plugins: [new SpotifyPlugin(), new SoundCloudPlugin(), new YtDlpPlugin()],
     leaveOnStop: false,
+    customFilters: {
+      "earrape": "bass=g=50,treble=g=20",
+      "vaporwave": "aresample=48000,asetrate=48000*0.8",
+      "nightcore": "aresample=48000,asetrate=48000*1.25",
+      "8d": "apulsator=hz=0.08",
+    },
   });
 
   process.on("warning", (e) => console.warn(e.stack));

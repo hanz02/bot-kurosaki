@@ -41,8 +41,6 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
-    if (!interaction.isCommand()) return;
-
     switch (interaction.options.getSubcommand()) {
       case "user":
         //* if follow command for "user follow"

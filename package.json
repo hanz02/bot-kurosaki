@@ -14,12 +14,9 @@
     "discord.js": "^13.6.0",
     "distube": "^3.3.4",
     "dotenv": "^16.0.0",
-    "ffmpeg-static": "^4.4.1",
-    "node-fetch": "^2.6.7",
+    "ffmpeg": "^0.0.4",
     "play-dl": "^1.9.4",
-    "sharp": "^0.30.4",
     "yt-mix-playlist": "^0.1.2-b.2",
-    "ytdl-core": "^4.11.0",
     "ytpl": "^2.3.0",
     "ytsr": "^3.8.0"
   },
