@@ -22,4 +22,4 @@ A small 1month project building using Node JS, a Discord music bot that supports
 #### Automated bot user-following behaviour
 This feature allow the bot to follow certain guild member to Voice Channel. If user swicth/leave/join voice channel, the bot will follow as well. When the bot is first invited a server, the bot by default will follow the user who invited the bot. 
 The behaviour of the bot is illustrated by the **flow chart** below: 
-![](./assets/bot-follow-behaviour.png)
+<img src="./assets/bot-follow-behaviour.png" alt="bot_behaviour_diagram" width="200"/>
