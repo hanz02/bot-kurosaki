@@ -65,7 +65,7 @@ module.exports = {
         break;
 
       default:
-        await interaction.reply(
+        await interaction.followUp(
           "Oops! Can't process your command, make sure your command is valid?"
         );
     }

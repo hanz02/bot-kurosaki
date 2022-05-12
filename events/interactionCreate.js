@@ -13,8 +13,9 @@ module.exports = {
         await command.execute(interaction, client);
       } catch (error) {
         console.error(error);
-        await interaction.reply({
-          content: "There was an error while executing this command!",
+        await interaction.followUp({
+          content:
+            "Something wrong executing this command, bot developer need to fix this",
           ephemeral: true,
         });
       }
@@ -31,7 +32,7 @@ module.exports = {
         await button.execute(interaction, client);
       } catch (error) {
         console.error(error);
-        await interaction.reply({
+        await interaction.channel.send({
           content:
             "Something wrong with the reply from button, bot developer need to fix this",
           ephemeral: true,
